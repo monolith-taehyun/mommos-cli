@@ -31,6 +31,14 @@ Commands:
   help [command]  display help for command
 ```
 
+기본 앱을 생성하는 방법
+
+```sh
+$ mkdir test-api
+$ cd test-api
+$ mmm app
+```
+
 ## 개발 로드맵
 
 - [x] 기본 애플리케이션 구조 생성
