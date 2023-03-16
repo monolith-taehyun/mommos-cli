@@ -33,27 +33,18 @@ class App extends Generator {
 		if (!fs.existsSync(templatesDir)) {
 			await this.spawnCommand('git', [
 				'clone',
-				'--filter=blob:none',
-				'--sparse',
+				'-b',
+				'templates',
+				'--single-branch',
 				'https://github.com/monolith-taehyun/mommos-cli.git',
 				templatesDir,
-			]);
-
-			await this.spawnCommand('git', ['checkout', 'templates']);
-
-			await this.spawnCommand('git', [
-				'--git-dir',
-				`${templatesDir}/.git`,
-				'sparse-checkout',
-				'add',
-				'src',
 			]);
 		}
 	}
 
 	writing() {
 		appBase: {
-			this.fs.copyTpl(this.templatePath(), this.destinationPath(), {
+			this.fs.copyTpl(this.templatePath('app'), this.destinationPath(), {
 				appName: genVariousCases(this.answers.appName),
 			});
 		}
