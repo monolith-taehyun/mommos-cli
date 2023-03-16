@@ -1,0 +1,11 @@
+input: <%= text.input %>
+slug text: <%= text.slug %>
+pascal text: <%= text.pascal %>
+camel text: <%= text.camel %>
+capital text: <%= text.capital %>
+dot text: <%= text.dot %>
+constant text: <%= text.constant %>
+sentence text: <%= text.sentence %>
+snake text: <%= text.snake %>
+space text: <%= text.space %>
+title text: <%= text.title %>
