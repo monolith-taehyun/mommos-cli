@@ -9,6 +9,13 @@ program
 	.description('Command Line Interface of Mommos Application');
 
 const generators = {
+	configure: {
+		name: 'configure',
+		alias: 'conf',
+		args: {},
+		destinationRoot: '.',
+		descripttion: 'Mommos CLI 설정',
+	},
 	app: {
 		name: 'app',
 		alias: 'a',

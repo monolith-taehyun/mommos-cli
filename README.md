@@ -26,10 +26,11 @@ Options:
   -h, --help      display help for command
 
 Commands:
-  app|a           Mommos 기반 Application 생성
-  avro|av         Avro 파일 생성
-  sample|sam      샘플 텍스트 파일 생성
-  help [command]  display help for command
+  configure|conf     Mommos CLI 설정
+  app|a              Mommos 기반 Application 생성
+  avro|av [options]  Avro 파일 생성
+  sample|sam         샘플 텍스트 파일 생성
+  help [command]     display help for command
 ```
 
 기본 앱을 생성하는 방법
