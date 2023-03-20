@@ -15,6 +15,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
+		"@kafkajs/confluent-schema-registry": "^3.3.0",
 		"commander": "^10.0.0",
 		"figlet": "^1.5.2",
 		"html-wiring": "^2.0.0",

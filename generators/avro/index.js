@@ -4,7 +4,12 @@ const path = require('path');
 const fs = require('fs');
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
-const { genVariousCases } = require('../../src/utils');
+const { genVariousCases, getConfigJson } = require('../../src/utils');
+
+const {
+	SchemaRegistry,
+	SchemaType,
+} = require('@kafkajs/confluent-schema-registry');
 
 class Avro extends Generator {
 	constructor(args, opts) {
@@ -18,6 +23,12 @@ class Avro extends Generator {
 				chalk.redBright('명령어 실행 위치는 Mommos 애플리케이션 root여야 합니다.'),
 			);
 			process.exit(1);
+		}
+
+		const mmmrc = path.join(this.destinationPath(), '.mmmrc');
+		const existsRc = fs.existsSync(mmmrc);
+		if (!existsRc) {
+			this.composeWith('mmm:configure');
 		}
 	}
 
@@ -205,11 +216,11 @@ class Avro extends Generator {
 				args,
 			);
 
-			this.fs.writeJSON(this.destinationPath(this.destinationFile), {
+			this.valueAvro = {
 				fields: args.fields.map((field) => {
 					const contents = {
 						name: field.fieldName,
-						type: field.isNullable ? [field.fieldType, null] : field.fieldType,
+						type: field.isNullable ? [field.fieldType, 'null'] : field.fieldType,
 					};
 					if (field.defaultValue.length > 0) {
 						contents.default = field.defaultValue;
@@ -219,13 +230,17 @@ class Avro extends Generator {
 				name: `${args.eventName.pascal}Event${args.avroType.pascal}Avro`,
 				namespace: `${args.namespace.dot}`,
 				type: 'record',
-			});
+			};
+
+			this.fs.writeJSON(
+				this.destinationPath(this.destinationFile),
+				this.valueAvro,
+			);
 		}
 
 		topicValueAvro: {
 			if (this.answers.topicValue.makeTopicValueAvro) {
-				this.topicValueAvroFile = `src/main/avro/schema-${args.eventName.snake}-value-v1.avsc`;
-				this.fs.writeJSON(this.destinationPath(this.topicValueAvroFile), {
+				this.topicValueAvro = {
 					fields: [
 						{
 							name: 'event',
@@ -243,14 +258,50 @@ class Avro extends Generator {
 					name: `${args.eventName.pascal}EventTopicValueAvro`,
 					namespace: `${args.namespace.dot}`,
 					type: 'record',
-				});
+				};
+				this.topicValueAvroFile = `src/main/avro/schema-${args.eventName.snake}-value-v1.avsc`;
+				this.fs.writeJSON(
+					this.destinationPath(this.topicValueAvroFile),
+					this.topicValueAvro,
+				);
 			}
+		}
+	}
+
+	async install() {
+		const _self = this;
+		if (
+			(
+				await this.prompt({
+					name: 'isRegister',
+					type: 'confirm',
+					message: `Avro 파일들을 Schema Registry에 등록할까요?`,
+					default: `y`,
+				})
+			).isRegister
+		) {
+			const config = getConfigJson(path.join(this.destinationPath(), '.mmmrc'));
+
+			const registry = new SchemaRegistry({
+				host: config.schemaRegistryUrl,
+				auth: {
+					username: config.schemaRegistryApiKey,
+					password: config.schemaRegistryApiSecret,
+				},
+			});
+
+			const { id: valueAvroSchemaId } = await registry.register(
+				{
+					type: SchemaType.AVRO,
+					schema: JSON.stringify(this.valueAvro),
+				},
+				{ subject: this.valueAvro.name },
+			);
 		}
 	}
 
 	async end() {
 		console.log(chalk.green('Avro 파일이 생성되었습니다.'));
-
 		if (
 			(
 				await this.prompt({

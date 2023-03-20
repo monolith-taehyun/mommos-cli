@@ -18,4 +18,10 @@ function genVariousCases(input) {
 	};
 }
 
-module.exports = { genVariousCases };
+function getConfigJson(configFile) {
+	const mmmrc = fs.readFileSync(configFile, 'utf8');
+	const config = JSON.parse(mmmrc);
+	return config;
+}
+
+module.exports = { genVariousCases, getConfigJson };
