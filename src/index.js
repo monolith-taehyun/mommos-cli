@@ -16,9 +16,16 @@ const generators = {
 		destinationRoot: '.',
 		descripttion: 'Mommos 기반 Application 생성',
 	},
+	avro: {
+		name: 'avro',
+		alias: 'av',
+		args: {},
+		destinationRoot: '.',
+		descripttion: 'Avro 파일 생성',
+	},
 	sample: {
 		name: 'sample',
-		alias: 's',
+		alias: 'sam',
 		args: {},
 		destinationRoot: '.',
 		descripttion: '샘플 텍스트 파일 생성',

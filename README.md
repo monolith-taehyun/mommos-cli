@@ -27,7 +27,8 @@ Options:
 
 Commands:
   app|a           Mommos 기반 Application 생성
-  sample|s        샘플 텍스트 파일 생성
+  avro|av         Avro 파일 생성
+  sample|sam      샘플 텍스트 파일 생성
   help [command]  display help for command
 ```
 
@@ -39,11 +40,34 @@ $ cd test-api
 $ mmm app
 ```
 
+Avro 파일 생성 명령어 예시
+
+```sh
+$ mmm avro
+::Avro 파일 생성::
+? 사용하고자 하는 네임스페이스(패키지)명을 알려주세요. kr.co.monolith.park.avro
+? Avro의 유형을 선택하세요. Command
+? Avro를 사용할 이벤트명을 입력하세요. Event와 Avro는 생략합니다.(예시: 'CreateTeam', 'create team', 'create-team') createSample
+? 필드를 추가하시겠습니까? Yes
+? 추가할 필드의 이름을 알려주세요. myField
+? 추가할 필드의 데이터 타입을 선택하세요. string: 문자열 값을 나타냅니다
+? null 값을 허용하시겠습니까? Yes
+? 기본 값이 있다면 입력하세요. sample
+? 필드를 추가하시겠습니까? No
+? 방금 추가한 Avro를 참조하는 Topic Value Avro를 추가하시겠습니까? Yes
+ conflict src/main/avro/schema-CreateSampleEventCommandAvro-v1.avsc
+? Overwrite src/main/avro/schema-CreateMyEventEventCommandAvro-v1.avsc? overwrite
+    force src/main/avro/schema-CreateSampleEventCommandAvro-v1.avsc
+identical src/main/avro/schema-create_sample-value-v1.avsc
+Avro 파일이 생성되었습니다.
+? 생성된 Avro 파일의 내용을 출력할까요? Yes
+```
+
 ## 개발 로드맵
 
 - [x] 기본 애플리케이션 구조 생성
 - [ ] DB 접속 등 각종 설정 추가
 - [ ] Topic 생성
-- [ ] Avro 소스 생성
+- [x] Avro 소스 생성
 - [ ] Entity 소스 생성
 - [ ] 이벤트 Flow 에 소스 생성
