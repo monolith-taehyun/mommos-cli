@@ -1,3 +1,4 @@
+const fs = require('fs');
 const to = require('to-case');
 const fileReader = require('html-wiring');
 const ucfirst = require('ucfirst');

@@ -290,13 +290,17 @@ class Avro extends Generator {
 				},
 			});
 
-			const { id: valueAvroSchemaId } = await registry.register(
-				{
-					type: SchemaType.AVRO,
-					schema: JSON.stringify(this.valueAvro),
-				},
-				{ subject: this.valueAvro.name },
-			);
+			try {
+				const { id: valueAvroSchemaId } = await registry.register(
+					{
+						type: SchemaType.AVRO,
+						schema: JSON.stringify(this.valueAvro),
+					},
+					{ subject: this.valueAvro.name },
+				);
+			} catch (err) {
+				console.log('schema register err', err);
+			}
 		}
 	}
 
