@@ -19,6 +19,7 @@
 		"commander": "^10.0.0",
 		"figlet": "^1.5.2",
 		"html-wiring": "^2.0.0",
+		"kafkajs": "^2.2.4",
 		"to-case": "^2.0.0",
 		"ucfirst": "^1.0.0",
 		"yeoman-environment": "^3.15.1",

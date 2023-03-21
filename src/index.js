@@ -29,6 +29,10 @@ const generators = {
 		args: {},
 		destinationRoot: '.',
 		descripttion: 'Avro 파일 생성',
+		options: [
+			{ flags: '-r, --register', description: 'register avro to schema registry' },
+			{ flags: '-o, --overwrite', description: 'overwite exists files' },
+		],
 	},
 	sample: {
 		name: 'sample',
@@ -49,13 +53,22 @@ Object.entries(generators).forEach(([name, v]) => {
 	});
 	v.generator.destinationRoot(v.destinationRoot);
 
-	program
+	const command = program
 		.command(name)
 		.alias(v.alias)
-		.description(v.descripttion)
-		.action(() => {
-			v.generator.run();
+		.description(v.descripttion);
+
+	if (v.options) {
+		v.options.forEach((option) => {
+			command.option(option.flags, option.description);
 		});
+	}
+
+	command.action((options) => {
+		console.log('options', options);
+		v.generator['opts'] = options;
+		v.generator.run();
+	});
 });
 
 program.parse(process.argv);
