@@ -4,11 +4,11 @@ const path = require('path');
 const fs = require('fs');
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
-
 const {
 	SchemaRegistry,
 	SchemaType,
 } = require('@kafkajs/confluent-schema-registry');
+const { writeJsonWithoutDuplicates } = require('../../src/utils');
 
 class Configure extends Generator {
 	constructor(args, opts) {
@@ -65,8 +65,7 @@ class Configure extends Generator {
 	writing() {
 		const mmmrcPath = path.join(this.destinationPath(), '.mmmrc');
 		const config = this.answers;
-		const mmmrc = JSON.stringify(config, null, 2);
-		fs.writeFileSync(mmmrcPath, mmmrc);
+		writeJsonWithoutDuplicates(mmmrcPath, config);
 	}
 }
 
