@@ -9,7 +9,8 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "node src/index.js",
-		"clear": "rm -rf output generators/sample/templates"
+		"clear": "rm -rf output generators/sample/templates",
+    "ig": "npm pack && npm install -g ./mommos-cli-0.1.0.tgz"
 	},
 	"keywords": [],
 	"author": "",

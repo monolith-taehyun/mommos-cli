@@ -19,10 +19,14 @@ function genVariousCases(input) {
 	};
 }
 
+function replace(input, regex, replacement) {
+	return input.replace(regex, replacement);
+}
+
 function getConfigJson(configFile) {
 	const mmmrc = fs.readFileSync(configFile, 'utf8');
 	const config = JSON.parse(mmmrc);
 	return config;
 }
 
-module.exports = { genVariousCases, getConfigJson };
+module.exports = { genVariousCases, replace, getConfigJson };
