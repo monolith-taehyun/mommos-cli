@@ -27,7 +27,11 @@ class Avro extends Generator {
 
 		const mmmrc = path.join(this.destinationPath(), '.mmmrc');
 		const existsRc = fs.existsSync(mmmrc);
-		if (!existsRc) {
+		if (existsRc) {
+			this.rcData = JSON.parse(fs.readFileSync(mmmrc));
+		}
+
+		if (!existsRc || !this.rcData?.schemaRegistryUrl) {
 			this.composeWith('mmm:configure');
 		}
 	}
@@ -40,7 +44,7 @@ class Avro extends Generator {
 				name: 'namespace',
 				type: 'input',
 				message: '사용하고자 하는 네임스페이스(패키지)명을 알려주세요.',
-				default: `kr.co.monolith.park.avro`,
+				default: `${this.rcData.package || 'kr.co.monolith.park'}.avro`,
 			},
 			{
 				name: 'avroType',
