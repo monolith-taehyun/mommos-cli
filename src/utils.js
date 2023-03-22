@@ -29,4 +29,19 @@ function getConfigJson(configFile) {
 	return config;
 }
 
-module.exports = { genVariousCases, replace, getConfigJson };
+function writeJsonWithoutDuplicates(filePath, data) {
+	const fileData = fs.readFileSync(filePath);
+	const existsData = JSON.parse(fileData);
+	const mergedData = {
+		...existsData,
+		...data,
+	};
+	fs.writeFileSync(filePath, JSON.stringify(mergedData, null, 2));
+}
+
+module.exports = {
+	genVariousCases,
+	replace,
+	getConfigJson,
+	writeJsonWithoutDuplicates,
+};
