@@ -4,12 +4,27 @@ const path = require('path');
 const fs = require('fs');
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
-const { genVariousCases, replace } = require('../../src/utils');
+const {
+	genVariousCases,
+	replace,
+	writeJsonWithoutDuplicates,
+} = require('../../src/utils');
 
 class App extends Generator {
 	constructor(args, opts) {
 		super(args, opts);
 		this.env = opts.env;
+	}
+
+	initializing() {
+		if (fs.existsSync(path.resolve(this.destinationPath(), 'build.gradle'))) {
+			console.error(
+				chalk.redBright(
+					'이미 다른 프로젝트가 존재합니다. 빈 디렉토리 내에서 실행해 주세요.',
+				),
+			);
+			process.exit(1);
+		}
 	}
 
 	async prompting() {
@@ -31,7 +46,6 @@ class App extends Generator {
 		];
 
 		this.answers = await this.prompt(asks);
-		this.category = genVariousCases(this.answers.appName);
 	}
 
 	async git() {
@@ -83,6 +97,15 @@ class App extends Generator {
 					package: genVariousCases(this.answers.package),
 				},
 			);
+		}
+		configure: {
+			const mmmrcPath = path.join(this.destinationPath(), '.mmmrc');
+			const config = {
+				appName: this.answers.appName,
+				package: this.answers.package,
+			};
+			const mmmrc = JSON.stringify(config, null, 2);
+			fs.writeFileSync(mmmrcPath, mmmrc);
 		}
 	}
 
