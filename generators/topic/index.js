@@ -5,7 +5,14 @@ const fs = require('fs');
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const { SchemaRegistry, SchemaType } = require('@kafkajs/confluent-schema-registry');
-const { getInnerString, toDot, toPascal, replace, genVariousCases, writeJsonWithoutDuplicates } = require('../../src/utils');
+const {
+	getInnerString,
+	toDot,
+	toPascal,
+	replace,
+	genVariousCases,
+	writeJsonWithoutDuplicates,
+} = require('../../src/utils');
 
 class Topic extends Generator {
 	constructor(args, opts) {
@@ -68,17 +75,15 @@ class Topic extends Generator {
 
 	writing() {
 		const packagePath = replace(this.rcData.package, '.', '/');
-		const args = {
-			topicName: genVariousCases(this.answers.topicName),
-			eventDispacherName: genVariousCases(this.answers.eventDispacherName),
-			package: genVariousCases(this.rcData.package),
-		};
-		console.log('args', args);
 		java: {
 			this.fs.copyTpl(
 				this.templatePath('EventDispatcher.java'),
 				this.destinationPath(`src/main/java/${packagePath}/kafka/${toPascal(this.answers.eventDispacherName)}.java`),
-				args,
+				{
+					topicName: genVariousCases(this.answers.topicName),
+					eventDispacherName: genVariousCases(this.answers.eventDispacherName),
+					package: genVariousCases(this.rcData.package),
+				},
 			);
 		}
 

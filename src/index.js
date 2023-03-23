@@ -64,7 +64,6 @@ Object.entries(generators).forEach(([name, v]) => {
 	}
 
 	command.action((options) => {
-		console.log('options', options);
 		v.generator['opts'] = options;
 		v.generator.run();
 	});
