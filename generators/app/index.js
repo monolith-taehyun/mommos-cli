@@ -4,11 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
-const {
-	genVariousCases,
-	replace,
-	writeJsonWithoutDuplicates,
-} = require('../../src/utils');
+const { genVariousCases, replace, writeJsonWithoutDuplicates } = require('../../src/utils');
 
 class App extends Generator {
 	constructor(args, opts) {
@@ -18,11 +14,7 @@ class App extends Generator {
 
 	initializing() {
 		if (fs.existsSync(path.resolve(this.destinationPath(), 'build.gradle'))) {
-			console.error(
-				chalk.redBright(
-					'이미 다른 프로젝트가 존재합니다. 빈 디렉토리 내에서 실행해 주세요.',
-				),
-			);
+			console.error(chalk.redBright('이미 다른 프로젝트가 존재합니다. 빈 디렉토리 내에서 실행해 주세요.'));
 			process.exit(1);
 		}
 	}
@@ -71,13 +63,7 @@ class App extends Generator {
 		appMain: {
 			this.fs.copyTpl(
 				this.templatePath('app-main/Application.java'),
-				this.destinationPath(
-					`src/main/java/${replace(
-						this.answers.package,
-						'.',
-						'/',
-					)}/Application.java`,
-				),
+				this.destinationPath(`src/main/java/${replace(this.answers.package, '.', '/')}/Application.java`),
 				{
 					appName: genVariousCases(this.answers.appName),
 					package: genVariousCases(this.answers.package),
@@ -85,13 +71,7 @@ class App extends Generator {
 			);
 			this.fs.copyTpl(
 				this.templatePath('app-main/ApplicationTests.java'),
-				this.destinationPath(
-					`src/test/java/${replace(
-						this.answers.package,
-						'.',
-						'/',
-					)}/ApplicationTest.java`,
-				),
+				this.destinationPath(`src/test/java/${replace(this.answers.package, '.', '/')}/ApplicationTest.java`),
 				{
 					appName: genVariousCases(this.answers.appName),
 					package: genVariousCases(this.answers.package),

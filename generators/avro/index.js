@@ -243,7 +243,7 @@ class Avro extends Generator {
 		}
 
 		topicValueAvro: {
-			if (this.answers.topicValue.makeTopicValueAvro) {
+			if (this.answers.topicValue?.makeTopicValueAvro) {
 				this.topicValueAvro = {
 					fields: [
 						{

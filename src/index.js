@@ -4,9 +4,7 @@ const path = require('path');
 const program = require('commander');
 const env = require('yeoman-environment').createEnv();
 
-program
-	.version('0.1.0')
-	.description('Command Line Interface of Mommos Application');
+program.version('0.1.0').description('Command Line Interface of Mommos Application');
 
 const generators = {
 	configure: {
@@ -22,6 +20,13 @@ const generators = {
 		args: {},
 		destinationRoot: '.',
 		descripttion: 'Mommos 기반 Application 생성',
+	},
+	topic: {
+		name: 'topic',
+		alias: 'tp',
+		args: {},
+		destinationRoot: '.',
+		descripttion: 'Topic 생성',
 	},
 	avro: {
 		name: 'avro',
@@ -44,19 +49,13 @@ const generators = {
 };
 
 Object.entries(generators).forEach(([name, v]) => {
-	env.register(
-		require.resolve(path.join(__dirname, '..', 'generators', name.toString())),
-		`mmm:${name}`,
-	);
+	env.register(require.resolve(path.join(__dirname, '..', 'generators', name.toString())), `mmm:${name}`);
 	v.generator = env.create(`mmm:${name}`, {
 		args: v.args,
 	});
 	v.generator.destinationRoot(v.destinationRoot);
 
-	const command = program
-		.command(name)
-		.alias(v.alias)
-		.description(v.descripttion);
+	const command = program.command(name).alias(v.alias).description(v.descripttion);
 
 	if (v.options) {
 		v.options.forEach((option) => {
@@ -65,7 +64,6 @@ Object.entries(generators).forEach(([name, v]) => {
 	}
 
 	command.action((options) => {
-		console.log('options', options);
 		v.generator['opts'] = options;
 		v.generator.run();
 	});

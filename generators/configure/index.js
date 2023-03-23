@@ -4,10 +4,7 @@ const path = require('path');
 const fs = require('fs');
 const Generator = require('yeoman-generator');
 const chalk = require('chalk');
-const {
-	SchemaRegistry,
-	SchemaType,
-} = require('@kafkajs/confluent-schema-registry');
+const { SchemaRegistry, SchemaType } = require('@kafkajs/confluent-schema-registry');
 const { writeJsonWithoutDuplicates } = require('../../src/utils');
 
 class Configure extends Generator {
@@ -18,9 +15,7 @@ class Configure extends Generator {
 
 	initializing() {
 		if (!fs.existsSync(path.resolve(this.destinationPath(), 'build.gradle'))) {
-			console.error(
-				chalk.redBright('명령어 실행 위치는 Mommos 애플리케이션 root여야 합니다.'),
-			);
+			console.error(chalk.redBright('명령어 실행 위치는 Mommos 애플리케이션 root여야 합니다.'));
 			process.exit(1);
 		}
 	}
