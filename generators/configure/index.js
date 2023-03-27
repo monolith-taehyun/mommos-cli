@@ -50,7 +50,7 @@ class Configure extends Generator {
 						default: `***`,
 					},
 			  ]
-			: null;
+			: [];
 
 		this.answers = {
 			...(await this.prompt(schemaRegistryAsks)),
