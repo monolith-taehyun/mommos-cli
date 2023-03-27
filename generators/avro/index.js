@@ -6,10 +6,7 @@ const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const { genVariousCases, getConfigJson } = require('../../src/utils');
 
-const {
-	SchemaRegistry,
-	SchemaType,
-} = require('@kafkajs/confluent-schema-registry');
+const { SchemaRegistry, SchemaType } = require('@kafkajs/confluent-schema-registry');
 
 class Avro extends Generator {
 	constructor(args, opts) {
@@ -19,9 +16,7 @@ class Avro extends Generator {
 
 	initializing() {
 		if (!fs.existsSync(path.resolve(this.destinationPath(), 'build.gradle'))) {
-			console.error(
-				chalk.redBright('명령어 실행 위치는 Mommos 애플리케이션 root여야 합니다.'),
-			);
+			console.error(chalk.redBright('명령어 실행 위치는 Mommos 애플리케이션 root여야 합니다.'));
 			process.exit(1);
 		}
 
@@ -44,7 +39,7 @@ class Avro extends Generator {
 				name: 'namespace',
 				type: 'input',
 				message: '사용하고자 하는 네임스페이스(패키지)명을 알려주세요.',
-				default: `${this.rcData.package || 'kr.co.monolith.park'}.avro`,
+				default: `${this.rcData?.package || 'kr.co.monolith.park'}.avro`,
 			},
 			{
 				name: 'avroType',
@@ -123,9 +118,7 @@ class Avro extends Generator {
 						value: 'array',
 					},
 					{
-						name: `${chalk.yellow(
-							'enum',
-						)}: 지정된 값 중 하나를 가진 열거형 값을 나타냅니다`,
+						name: `${chalk.yellow('enum')}: 지정된 값 중 하나를 가진 열거형 값을 나타냅니다`,
 						value: 'enum',
 					},
 					{
@@ -133,9 +126,7 @@ class Avro extends Generator {
 						value: 'map',
 					},
 					{
-						name: `${chalk.gray(
-							'union',
-						)}: 여러 개의 타입 중 하나를 가질 수 있는 값을 나타냅니다`,
+						name: `${chalk.gray('union')}: 여러 개의 타입 중 하나를 가질 수 있는 값을 나타냅니다`,
 						value: 'union',
 					},
 					{
@@ -188,9 +179,7 @@ class Avro extends Generator {
 			const result = await this.prompt({
 				name: 'makeTopicValueAvro',
 				type: 'confirm',
-				message: `방금 추가한 Avro를 참조하는 ${chalk.yellow(
-					'Topic Value Avro',
-				)}를 추가하시겠습니까?`,
+				message: `방금 추가한 Avro를 참조하는 ${chalk.yellow('Topic Value Avro')}를 추가하시겠습니까?`,
 				default: `y`,
 			});
 			return result.makeTopicValueAvro ? result : null;
@@ -213,13 +202,6 @@ class Avro extends Generator {
 
 		appBase: {
 			this.destinationFile = `src/main/avro/schema-${args.eventName.pascal}Event${args.avroType.pascal}Avro-v1.avsc`;
-
-			this.fs.copyTpl(
-				this.templatePath('schema-v1.ejs'),
-				this.destinationPath(this.destinationFile),
-				args,
-			);
-
 			this.valueAvro = {
 				fields: args.fields.map((field) => {
 					const contents = {
@@ -236,10 +218,7 @@ class Avro extends Generator {
 				type: 'record',
 			};
 
-			this.fs.writeJSON(
-				this.destinationPath(this.destinationFile),
-				this.valueAvro,
-			);
+			this.fs.writeJSON(this.destinationPath(this.destinationFile), this.valueAvro);
 		}
 
 		topicValueAvro: {
@@ -253,10 +232,7 @@ class Avro extends Generator {
 						{
 							default: null,
 							name: 'value',
-							type: [
-								'null',
-								`${args.eventName.pascal}Event${args.avroType.pascal}Avro`,
-							],
+							type: ['null', `${args.eventName.pascal}Event${args.avroType.pascal}Avro`],
 						},
 					],
 					name: `${args.eventName.pascal}EventTopicValueAvro`,
@@ -264,10 +240,7 @@ class Avro extends Generator {
 					type: 'record',
 				};
 				this.topicValueAvroFile = `src/main/avro/schema-${args.eventName.snake}-value-v1.avsc`;
-				this.fs.writeJSON(
-					this.destinationPath(this.topicValueAvroFile),
-					this.topicValueAvro,
-				);
+				this.fs.writeJSON(this.destinationPath(this.topicValueAvroFile), this.topicValueAvro);
 			}
 		}
 	}
