@@ -3,5 +3,6 @@ module.exports = {
 	configure: require('./configure'),
 	topic: require('./topic'),
 	avro: require('./avro'),
+	kafka: require('./kafka'),
 	sample: require('./sample'),
 };
