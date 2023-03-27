@@ -22,22 +22,34 @@ class App extends Generator {
 	async prompting() {
 		console.log(chalk.yellow('::Mommos Application 생성::'));
 		const _self = this;
-		const asks = [
-			{
-				name: 'appName',
-				type: 'input',
-				message: '애플리케이션명(디렉토리명): ',
-				default: path.basename(this.destinationPath()),
-			},
-			{
-				name: 'package',
-				type: 'input',
-				message: '사용하고자 하는 네임스페이스(패키지)명을 알려주세요.',
-				default: `kr.co.monolith.park`,
-			},
-		];
+		const asks = this.appName
+			? [
+					{
+						name: 'package',
+						type: 'input',
+						message: '사용하고자 하는 네임스페이스(패키지)명을 알려주세요.',
+						default: `kr.co.monolith.park`,
+					},
+			  ]
+			: [
+					{
+						name: 'appName',
+						type: 'input',
+						message: '애플리케이션명(디렉토리명): ',
+						default: path.basename(this.destinationPath()),
+					},
+					{
+						name: 'package',
+						type: 'input',
+						message: '사용하고자 하는 네임스페이스(패키지)명을 알려주세요.',
+						default: `kr.co.monolith.park`,
+					},
+			  ];
 
 		this.answers = await this.prompt(asks);
+		if (!this.answers.appName) {
+			this.answers.appName = this.appName;
+		}
 	}
 
 	async git() {
