@@ -42,19 +42,26 @@ function getInnerString(str) {
 }
 
 function getConfigJson(configFile) {
+	if (fs.existsSync(filePath) === false) {
+		return {};
+	}
 	const mmmrc = fs.readFileSync(configFile, 'utf8');
 	const config = JSON.parse(mmmrc);
 	return config;
 }
 
 function writeJsonWithoutDuplicates(filePath, data) {
-	const fileData = fs.readFileSync(filePath);
-	const existsData = JSON.parse(fileData);
-	const mergedData = {
-		...existsData,
-		...data,
-	};
-	fs.writeFileSync(filePath, JSON.stringify(mergedData, null, 2));
+	if (fs.existsSync(filePath) === false) {
+		fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+	} else {
+		const fileData = fs.readFileSync(filePath, 'utf8');
+		const existsData = JSON.parse(fileData);
+		const mergedData = {
+			...existsData,
+			...data,
+		};
+		fs.writeFileSync(filePath, JSON.stringify(mergedData, null, 2));
+	}
 }
 
 module.exports = {
