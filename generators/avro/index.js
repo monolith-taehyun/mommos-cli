@@ -260,10 +260,10 @@ class Avro extends Generator {
 			const config = getConfigJson(path.join(this.destinationPath(), '.mmmrc'));
 
 			const registry = new SchemaRegistry({
-				host: config.schemaRegistryUrl,
+				host: config?.schemaRegistryUrl,
 				auth: {
-					username: config.schemaRegistryApiKey,
-					password: config.schemaRegistryApiSecret,
+					username: config?.schemaRegistryApiKey,
+					password: config?.schemaRegistryApiSecret,
 				},
 			});
 
