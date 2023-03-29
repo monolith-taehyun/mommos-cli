@@ -39,12 +39,46 @@ Commands:
 $ mkdir test-api
 $ cd test-api
 $ mmm app
+
+::Mommos Application 생성::
+? 애플리케이션명(디렉토리명):  sample-test-api
+? 사용하고자 하는 네임스페이스(패키지)명을 알려주세요. kr.co.monolith.park
+...
+애플리케이션 소스가 생성되었습니다.
+```
+
+스키마 레지스트리 정보 등록
+
+```sh
+$ mmm configure
+
+::CLI 설정 파일 생성::
+? Schema Registry 정보를 설정하시겠습니까? Yes
+? Schema Registry URL을 입력하세요. http://localhost:8081
+? Schema Registry API Key를 입력하세요. [hidden]
+? Schema Registry API Secret을 입력하세요. [hidden]
+```
+
+Topic 및 EventDispatcher 생성
+- [x] EventDispatcher 파일 생성
+- [ ] Kafka에 Topic 생성
+
+```sh
+$ mmm topic
+
+::Topic 생성::
+? Topic 파일을 생성하시겠습니까? Yes
+? Topic 명을 입력하세요. test
+? Event Dispacher를 생성하시겠습니까? Yes
+? Event Dispacher 클래스명을 입력하세요. TestEventDispacher
+   create src/main/java/kr/co/monolith/park/kafka/TestEventDispacher.java
 ```
 
 Avro 파일 생성 명령어 예시
 
 ```sh
 $ mmm avro
+
 ::Avro 파일 생성::
 ? 사용하고자 하는 네임스페이스(패키지)명을 알려주세요. kr.co.monolith.park.avro
 ? Avro의 유형을 선택하세요. Command
@@ -64,11 +98,31 @@ Avro 파일이 생성되었습니다.
 ? 생성된 Avro 파일의 내용을 출력할까요? Yes
 ```
 
-## 개발 로드맵
+Avro 스키마 등록 명령어 예시
 
-- [x] 기본 애플리케이션 구조 생성
-- [ ] DB 접속 등 각종 설정 추가
-- [ ] Topic 생성
-- [x] Avro 소스 생성
-- [ ] Entity 소스 생성
-- [ ] 이벤트 Flow 에 소스 생성
+```sh
+$ mmm avro reg ./src/main/avro/schema-CreateSampleEventCommandAvro-v1.avsc
+
+::Schema Registry 등록::
+{
+  "fields": [
+    {
+      "name": "myField",
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  ],
+  "name": "CreateSampleEventCommandAvro",
+  "namespace": "kr.co.monolith.park.avro",
+  "type": "record"
+}
+? Schema Registry URL:https://psrc-7q7vj.ap-southeast-2.aws.confluent.cloud
+Avro 파일을 위 Schema Registry에 등록하시겠습니까? Yes
+result { id: 100511 }
+```
+
+## 개발 진행 이슈
+
+- `mmm kafka create` 명령어 및 `mmm topic` 명령어를 통해 Topic을 생성하려고 하였으나 해결하지 못하고 있음
