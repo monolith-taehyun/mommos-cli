@@ -1,5 +1,5 @@
 const path = require('path');
-const { Command } = require('commander');
+const { Command, Argument } = require('commander');
 const { yeomanEnv } = require('../global');
 
 const name = 'avro';
@@ -17,5 +17,30 @@ cmd.alias('av');
 cmd.action(() => {
 	generator.run();
 });
+
+// mmm avro register
+const registerCommandName = `register`;
+const registerGeneratorName = `${name}-${registerCommandName}`;
+
+yeomanEnv.register(
+	require.resolve(path.join(__dirname, '../..', 'generators', registerGeneratorName)),
+	`mmm:${registerGeneratorName}`,
+);
+
+const avroRegisterGennertator = yeomanEnv.create(`mmm:${registerGeneratorName}`, {
+	args: {},
+});
+
+avroRegisterGennertator.destinationRoot('.');
+
+const avroRegisterCommand = new Command(registerCommandName);
+avroRegisterCommand.description('Register avro to schema registry');
+avroRegisterCommand.alias('reg');
+avroRegisterCommand.addArgument(new Argument('<path>', 'Avro file path', ''));
+avroRegisterCommand.action((path) => {
+	avroRegisterGennertator['avroFilePath'] = path;
+	avroRegisterGennertator.run();
+});
+cmd.addCommand(avroRegisterCommand);
 
 module.exports = cmd;

@@ -42,7 +42,7 @@ function getInnerString(str) {
 }
 
 function getConfigJson(configFile) {
-	if (fs.existsSync(filePath) === false) {
+	if (fs.existsSync(configFile) === false) {
 		return {};
 	}
 	const mmmrc = fs.readFileSync(configFile, 'utf8');
