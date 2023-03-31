@@ -26,11 +26,41 @@ Options:
   -h, --help      display help for command
 
 Commands:
-  configure|conf     Mommos CLI 설정
-  app|a              Mommos 기반 Application 생성
-  avro|av [options]  Avro 파일 생성
-  sample|sam         샘플 텍스트 파일 생성
-  help [command]     display help for command
+  app|ap          Mommos 기반 Application 생성
+  configure|conf  Mommos CLI 설정
+  topic|tp        Topic 생성
+  avro|av         Avro 파일 생성
+  kafka|k         Kafka 요청
+  sample|sam      샘플 텍스트 파일 생성
+  help [command]  display help for command
+```
+
+명령어의 체계는 다음과 같습니다.
+
+> 모서리가 둥근 사각형은 `명령어`를 나타내고 육각형은 해당 명령어의 설명을 나타냅니다.
+- 예를 들어 Avro를 스키마레지스트리에 등록하는 명령은 `$ mmm avro register ./src/main/avro/my-avro-v1.avsc` 와 같이 사용할 수 있습니다.
+
+```mermaid
+graph LR
+
+Main(mmm) --> APP(app)
+Main --> CONF(configure)
+Main --> TOPIC(topic)
+Main --> AVRO(avro)
+Main --> KAFKA(kafka)
+
+APP -.-> |생략가능| APP_CREATE(create) -.- ACR{{애플리케이션 생성}}
+
+CONF -.- CONF_DESC{{정보 설정}}
+
+TOPIC -.- TR{{토픽 관련 파일 생성}}
+
+AVRO -.- AVCR{{Avro 파일 생성}}
+AVRO --> AVRO_REGISTER(register) -.- |path| AVREGR{{Avro를 스키마레지스트리에 등록}}
+
+KAFKA --> KAFKA_TOPIC(topic)
+KAFKA_TOPIC --> KAFKA_TOPIC_CREATE(create) -.- |name|KTCR{{Topic 생성}}
+KAFKA_TOPIC --> KAFKA_TOPIC_LIST(list) -.- KTLR{{등록된 Topic 목록 조회}}
 ```
 
 기본 앱을 생성하는 방법
