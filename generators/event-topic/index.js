@@ -14,7 +14,7 @@ const {
 	writeJsonWithoutDuplicates,
 } = require('../../src/utils');
 
-class Topic extends Generator {
+class EventTopic extends Generator {
 	constructor(args, opts) {
 		super(args, opts);
 		this.env = opts.env;
@@ -37,14 +37,31 @@ class Topic extends Generator {
 		console.log(chalk.yellow('::Topic 생성::'));
 		const moduleName = getInnerString(toDot(this.rcData?.appName || ''));
 		const moduleNamePascal = toPascal(moduleName);
-		const topicAsks = (
-			await this.prompt({
-				name: 'isMakeTopicFile',
-				type: 'confirm',
-				message: 'Topic 파일을 생성하시겠습니까?',
-				default: `y`,
-			})
-		).isMakeTopicFile
+		const topicNamePascal = toPascal(this.topicName ? this.topicName : moduleName);
+		const topicAsks = this.topicName
+			? [
+					{
+						name: 'isCreateEventDispacher',
+						type: 'confirm',
+						message: 'Event Dispacher를 생성하시겠습니까?',
+						default: `y`,
+					},
+					{
+						name: 'eventDispacherName',
+						type: 'input',
+						message: 'Event Dispacher 클래스명을 입력하세요.',
+						default: `${moduleNamePascal}EventDispacher`,
+						when: (answers) => answers.isCreateEventDispacher,
+					},
+			  ]
+			: (
+					await this.prompt({
+						name: 'isMakeTopicFile',
+						type: 'confirm',
+						message: 'Topic 파일을 생성하시겠습니까?',
+						default: `y`,
+					})
+			  ).isMakeTopicFile
 			? [
 					{
 						name: 'topicName',
@@ -66,11 +83,13 @@ class Topic extends Generator {
 						when: (answers) => answers.isCreateEventDispacher,
 					},
 			  ]
-			: null;
+			: {};
 
 		this.answers = {
+			topicName: this.topicName,
 			...(await this.prompt(topicAsks)),
 		};
+		console.log('this.answers', this.answers);
 	}
 
 	writing() {
@@ -95,4 +114,4 @@ class Topic extends Generator {
 	}
 }
 
-module.exports = Topic;
+module.exports = EventTopic;
