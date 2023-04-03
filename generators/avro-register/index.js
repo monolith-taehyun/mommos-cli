@@ -67,8 +67,6 @@ class AvroRegister extends Generator {
 					{ subject: avroData.name },
 				);
 				console.log('result', result);
-
-        await registry.
 			} catch (err) {
 				console.log('schema register err', err);
 			}
