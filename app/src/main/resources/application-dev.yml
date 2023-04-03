@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    read:
+      maximum-pool-size: 3
+    write:
+      maximum-pool-size: 3
+
+logging:
+  level:
+    root: debug
+    org.hibernate.type: trace
+    com.zaxxer.hikari.pool: info
+    org.apache.kafka.clients: info
+    org.springframework.kafka.listener.KafkaMessageListenerContainer: info

@@ -1,0 +1,75 @@
+spring:
+  application:
+    name: <%= appName.input %>
+  datasource:
+    read:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://${READ_HOST}/schema?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&connectTimeout=5000&socketTimeout=10000&useSSL=false&useTimezone=true&serverTimezone=UTC
+      username: ${READ_USERNAME}
+      password: ${READ_PASSWORD}
+      maximum-pool-size: 20
+    write:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://${WRITE_HOST}/schema?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&connectTimeout=5000&socketTimeout=10000&useSSL=false&useTimezone=true&serverTimezone=UTC
+      username: ${WRITE_USERNAME}
+      password: ${WRITE_PASSWORD}
+      maximum-pool-size: 10
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVER_HOST}
+    properties:
+      security.protocol: SASL_SSL
+      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username='${KAFKA_API_KEY}' password='${KAFKA_API_SECRET}';
+      sasl.mechanism: PLAIN
+      schema.registry.url: ${KAFKA_SCHEMA_REGISTRY_URL}
+      basic.auth.credentials.source: USER_INFO
+      basic.auth.user.info: ${KAFKA_SCHEMA_REGISTRY_USER_INFO}
+    producer:
+      client-id: ${spring.application.name}-${spring.profiles.active}-group
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      acks: all
+    consumer:
+      group-id: ${spring.application.name}-${spring.profiles.active}-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      auto-offset-reset: latest
+      enable-auto-commit: false
+      isolation-level: read_committed
+      properties:
+        specific.avro.reader: true
+  sleuth:
+    sampler:
+      probability: 1.0
+system:
+  zone-id : ${ZONE_ID}
+  platform-id: ${PLATFORM_ID}
+  event:
+    topic:
+      my.topic: my.topic
+  api:
+    slack:
+      webhook:
+        url: ${SLACK_API_URL}
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{x-sgp-group-id},%X{x-sgp-uuid}]"
+  level:
+    my.package: debug
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
+
+---
+spring:
+  config:
+    activate:
+      on-profile: loc
+server:
+  port: 8152

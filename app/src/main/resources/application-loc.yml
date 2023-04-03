@@ -1,0 +1,50 @@
+spring:
+  datasource:
+    read:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost:3306/schema?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&connectTimeout=5000&socketTimeout=10000&useSSL=false&useTimezone=true&serverTimezone=UTC
+      username: root
+      password:
+      maximum-pool-size: 1
+    write:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://localhost:3306/schema?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&connectTimeout=5000&socketTimeout=10000&useSSL=false&useTimezone=true&serverTimezone=UTC
+      username: root
+      password:
+      maximum-pool-size: 1
+  kafka:
+    bootstrap-servers: localhost:9092
+    properties:
+      security.protocol: SASL_SSL
+      sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username='BXYSQZENMZHY6O3Y' password='Z2BtGbyPZtgP+j798api/HEOX/kUYTUCrKIu4pjq5MWGrnkUKdABcQhZkPhZha8j';
+      sasl.mechanism: PLAIN
+      schema.registry.url: https://psrc-7q7vj.ap-southeast-2.aws.confluent.cloud
+      basic.auth.credentials.source: USER_INFO
+      basic.auth.user.info: TY3L6IGIAE7WE7AX:L0LdLzyik7FEc2mzJBwEjHY20HLw9P8nz2fzbdN1Hpy5wBbfVbbip84zCWk8oFpn
+    producer:
+      client-id: ${spring.application.name}-${mommos.application.host}-group
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      acks: all
+    consumer:
+      group-id: ${spring.application.name}-${mommos.application.host}-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      auto-offset-reset: latest
+      enable-auto-commit: false
+      isolation-level: read_committed
+      properties:
+        specific.avro.reader: true
+logging:
+  level:
+    root: debug
+    org.hibernate.type: trace
+    com.zaxxer.hikari.pool: info
+    org.apache.kafka.clients: info
+    org.springframework.kafka.listener.KafkaMessageListenerContainer: info
+
+system:
+  api:
+    slack:
+      webhook:
+        url: https://hooks.slack.com/services/my-webhook-url

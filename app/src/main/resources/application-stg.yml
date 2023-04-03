@@ -1,0 +1,7 @@
+logging:
+  level:
+    root: info
+    com.monolith.mommos: debug
+    kr.co.monolith.park: debug
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace

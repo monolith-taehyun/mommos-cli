@@ -1,0 +1,79 @@
+spring:
+  datasource:
+    read:
+      driver-class-name: org.h2.Driver
+      jdbc-url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+      username: sa
+      password: sa
+    write:
+      driver-class-name: org.h2.Driver
+      jdbc-url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+      username: sa
+      password: sa
+  jpa:
+    hibernate:
+      ddl-auto: create
+  security:
+    oauth2:
+      resourceserver:
+        keycloak:
+          issue-uri: dummy-url
+      client:
+        registration:
+          keycloak:
+            authorization-grant-type: client_credentials
+            client-id: dummy-id
+            client-secret: dummy-secret
+        provider:
+          keycloak:
+            token-uri: dummy-url
+  kafka:
+    bootstrap-servers: localhost:9092
+    properties:
+      security.protocol: PLAINTEXT
+      sasl.jaas.config: ~
+      sasl.mechanism: GSSAPI
+      schema.registry.url: mock://test
+      basic.auth.credentials.source: URL
+      basic.auth.user.info: ~
+    producer:
+      client-id: ${spring.application.name}-test-group
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      acks: all
+    consumer:
+      group-id: ${spring.application.name}-test-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      auto-offset-reset: latest
+      enable-auto-commit: false
+      isolation-level: read_committed
+      properties:
+        specific.avro.reader: true
+
+security:
+  oauth2:
+    resource:
+      token-info-uri: dummy-url
+    client:
+      access-token-uri: dummy-url
+      grant-type: client_credentials
+      client-id: dummy-client-id
+      client-secret: dummy-client-secret
+
+system:
+  event:
+    topic:
+      dummy.sample-topic: dummy.sample_topic
+  api:
+    slack:
+      webhook:
+        url: dummy-url
+
+logging:
+  level:
+    root: debug
+    org.hibernate.type: trace
+    com.zaxxer.hikari.pool: info
+    org.apache.kafka.clients: info
+    org.springframework.kafka.listener.KafkaMessageListenerContainer: info
