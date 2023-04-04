@@ -38,7 +38,7 @@ class EventTopic extends Generator {
 
 	async prompting() {
 		console.log(chalk.yellow('::Topic 생성::'));
-		const moduleName = getInnerString(toDot(this.rcData?.appName || ''));
+		const moduleName = getInnerString(toDot(this.rcData?.appName || path.basename(this.destinationPath()) || ''));
 		const moduleNamePascal = toPascal(moduleName);
 		const topicNamePascal = toPascal(this.topicName ? this.topicName : moduleName);
 		const topicAsks = this.topicName
@@ -92,7 +92,6 @@ class EventTopic extends Generator {
 			topicName: this.topicName,
 			...(await this.prompt(topicAsks)),
 		};
-		console.log('this.answers', this.answers);
 	}
 
 	writing() {
@@ -111,8 +110,8 @@ class EventTopic extends Generator {
 
 		updateMmmRc: {
 			const mmmrcPath = path.join(this.destinationPath(), '.mmmrc');
-			const config = this.answers;
-			writeJsonWithoutDuplicates(mmmrcPath, config);
+			const eventTopics = { [this.answers.topicName]: this.answers };
+			writeJsonWithoutDuplicates(mmmrcPath, eventTopics);
 		}
 	}
 }
