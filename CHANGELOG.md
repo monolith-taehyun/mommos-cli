@@ -1,3 +1,19 @@
+## v0.7.0 (2023-04-04)
+
+### Feat
+
+- **event**: event mapping 명령어를 추가
+- app에서 composeWith로 실행되는 경우에 대하여 실행 위치 검사 스킵
+- **event**: event 명령어를 추가하고 topic 명령어를 그 하위로 이동
+
+### Fix
+
+- **bug**: 버그 오타 라인 삭제
+
+### Refactor
+
+- **app**: app 명령어로 app create 를 사용하도록 수정
+
 ## v0.6.0 (2023-03-29)
 
 ### Feat
