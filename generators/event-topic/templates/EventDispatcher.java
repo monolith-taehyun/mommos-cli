@@ -1,4 +1,4 @@
-package <%= package.dot %>;
+package <%= package.dot %>.kafka;
 
 import com.monolith.mommos.event.annotation.EventDispatcher;
 import org.apache.avro.specific.SpecificRecord;

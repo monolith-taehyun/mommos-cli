@@ -11,8 +11,9 @@ class Event extends Generator {
 		this.env = opts.env;
 	}
 
-	initializing() {
-		this.composeWith('mmm:event-topic');
+	async initializing() {
+		await this.composeWith('mmm:event-topic');
+		await this.composeWith('mmm:event-mapping');
 	}
 }
 
