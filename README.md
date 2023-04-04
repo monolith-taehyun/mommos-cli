@@ -38,14 +38,14 @@ Commands:
 명령어의 체계는 다음과 같습니다.
 
 > 모서리가 둥근 사각형은 `명령어`를 나타내고 육각형은 해당 명령어의 설명을 나타냅니다.
-- 예를 들어 Avro를 스키마레지스트리에 등록하는 명령은 `$ mmm avro register ./src/main/avro/my-avro-v1.avsc` 와 같이 사용할 수 있습니다.
+> 예를 들어 Avro를 스키마레지스트리에 등록하는 명령은 `$ mmm avro register ./src/main/avro/my-avro-v1.avsc` 와 같이 사용할 수 있습니다.
 
 ```mermaid
 graph LR
 
 Main(mmm) --> APP(app)
 Main --> CONF(configure)
-Main --> TOPIC(topic)
+Main --> EVENT(event)
 Main --> AVRO(avro)
 Main --> KAFKA(kafka)
 
@@ -53,7 +53,9 @@ APP -.-> |생략가능| APP_CREATE(create) -.- ACR{{애플리케이션 생성}}
 
 CONF -.- CONF_DESC{{정보 설정}}
 
-TOPIC -.- TR{{토픽 관련 파일 생성}}
+EVENT -.- ER{{토픽 및 매핑 생성}}
+EVENT --> EVENT_TOPIC(topic) -.- ETR{{토픽 관련 파일 생성}}
+EVENT --> EVENT_MAPPING(mapping) -.- EMR{{이벤트 매핑 파일 생성}}
 
 AVRO -.- AVCR{{Avro 파일 생성}}
 AVRO --> AVRO_REGISTER(register) -.- |path| AVREGR{{Avro를 스키마레지스트리에 등록}}
@@ -94,14 +96,28 @@ Topic 및 EventDispatcher 생성
 - [ ] Kafka에 Topic 생성
 
 ```sh
-$ mmm topic
+$ mmm event
 
 ::Topic 생성::
 ? Topic 파일을 생성하시겠습니까? Yes
 ? Topic 명을 입력하세요. test
 ? Event Dispacher를 생성하시겠습니까? Yes
 ? Event Dispacher 클래스명을 입력하세요. TestEventDispacher
+::Event Mapping 생성::
+? Event Mapping 파일을 생성하시겠습니까? Yes
+? Topic 명을 입력하세요. test
+? 수신하려는 이벤트명을 입력하세요.
+? 발행하려는 이벤트명을 입력하세요.
+? Event Dispacher 클래스명을 입력하세요. TestEventHandler
+this.answers {
+  topicName: 'test',
+  cunsumeEventName: '',
+  produceEventName: '',
+  eventHandlerName: 'TestEventHandler'
+}
    create src/main/java/kr/co/monolith/park/kafka/TestEventDispacher.java
+   create src/main/java/kr/co/monolith/park/event/TestEventHandler.java
+   create src/test/java/kr/co/monolith/park/event/TestEventHandlerTest.java
 ```
 
 Avro 파일 생성 명령어 예시
