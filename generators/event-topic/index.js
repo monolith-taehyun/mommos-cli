@@ -14,14 +14,17 @@ const {
 	writeJsonWithoutDuplicates,
 } = require('../../src/utils');
 
-class Topic extends Generator {
+class EventTopic extends Generator {
 	constructor(args, opts) {
 		super(args, opts);
 		this.env = opts.env;
 	}
 
 	initializing() {
-		if (!fs.existsSync(path.resolve(this.destinationPath(), 'build.gradle'))) {
+		if (
+			this.env._rootGenerator._namespace !== 'mmm:app' &&
+			!fs.existsSync(path.resolve(this.destinationPath(), 'build.gradle'))
+		) {
 			console.error(chalk.redBright('명령어 실행 위치는 Mommos 애플리케이션 root여야 합니다.'));
 			process.exit(1);
 		}
@@ -35,16 +38,33 @@ class Topic extends Generator {
 
 	async prompting() {
 		console.log(chalk.yellow('::Topic 생성::'));
-		const moduleName = getInnerString(toDot(this.rcData?.appName || ''));
+		const moduleName = getInnerString(toDot(this.rcData?.appName || path.basename(this.destinationPath()) || ''));
 		const moduleNamePascal = toPascal(moduleName);
-		const topicAsks = (
-			await this.prompt({
-				name: 'isMakeTopicFile',
-				type: 'confirm',
-				message: 'Topic 파일을 생성하시겠습니까?',
-				default: `y`,
-			})
-		).isMakeTopicFile
+		const topicNamePascal = toPascal(this.topicName ? this.topicName : moduleName);
+		const topicAsks = this.topicName
+			? [
+					{
+						name: 'isCreateEventDispacher',
+						type: 'confirm',
+						message: 'Event Dispacher를 생성하시겠습니까?',
+						default: `y`,
+					},
+					{
+						name: 'eventDispacherName',
+						type: 'input',
+						message: 'Event Dispacher 클래스명을 입력하세요.',
+						default: `${moduleNamePascal}EventDispacher`,
+						when: (answers) => answers.isCreateEventDispacher,
+					},
+			  ]
+			: (
+					await this.prompt({
+						name: 'isMakeTopicFile',
+						type: 'confirm',
+						message: 'Topic 파일을 생성하시겠습니까?',
+						default: `y`,
+					})
+			  ).isMakeTopicFile
 			? [
 					{
 						name: 'topicName',
@@ -66,9 +86,10 @@ class Topic extends Generator {
 						when: (answers) => answers.isCreateEventDispacher,
 					},
 			  ]
-			: null;
+			: {};
 
 		this.answers = {
+			topicName: this.topicName,
 			...(await this.prompt(topicAsks)),
 		};
 	}
@@ -89,10 +110,10 @@ class Topic extends Generator {
 
 		updateMmmRc: {
 			const mmmrcPath = path.join(this.destinationPath(), '.mmmrc');
-			const config = this.answers;
-			writeJsonWithoutDuplicates(mmmrcPath, config);
+			const eventTopics = { [this.answers.topicName]: this.answers };
+			writeJsonWithoutDuplicates(mmmrcPath, eventTopics);
 		}
 	}
 }
 
-module.exports = Topic;
+module.exports = EventTopic;

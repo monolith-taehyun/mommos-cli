@@ -15,7 +15,10 @@ class AvroRegister extends Generator {
 	}
 
 	async initializing() {
-		if (!fs.existsSync(path.resolve(this.destinationPath(), 'build.gradle'))) {
+		if (
+			this.env._rootGenerator._namespace !== 'mmm:app' &&
+			!fs.existsSync(path.resolve(this.destinationPath(), 'build.gradle'))
+		) {
 			console.error(chalk.redBright('명령어 실행 위치는 Mommos 애플리케이션 root여야 합니다.'));
 			process.exit(1);
 		}
@@ -67,8 +70,6 @@ class AvroRegister extends Generator {
 					{ subject: avroData.name },
 				);
 				console.log('result', result);
-
-        await registry.
 			} catch (err) {
 				console.log('schema register err', err);
 			}
