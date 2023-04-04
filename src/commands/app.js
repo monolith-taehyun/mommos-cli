@@ -19,12 +19,28 @@ cmd.action((options) => {
 	generator.run();
 });
 
-const createCommand = new Command('create');
+// mmm app create
+const createCommandName = `create`;
+const createGeneratorName = `${name}-${createCommandName}`;
+
+yeomanEnv.register(
+	require.resolve(path.join(__dirname, '../..', 'generators', createGeneratorName)),
+	`mmm:${createGeneratorName}`,
+);
+
+const createGennertator = yeomanEnv.create(`mmm:${createGeneratorName}`, {
+	args: {},
+});
+
+createGennertator.destinationRoot('.');
+
+const createCommand = new Command(createCommandName);
 createCommand.description('Create Application');
 createCommand.addOption(new Option('-n, --name <name>', 'Application name'));
-createCommand.action((options) => {
+createCommand.alias('c');
+createCommand.action((name) => {
 	generator['appName'] = options?.name;
-	generator.run();
+	createGennertator.run();
 });
 cmd.addCommand(createCommand);
 
