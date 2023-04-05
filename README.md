@@ -28,11 +28,29 @@ Options:
 Commands:
   app|ap          Mommos 기반 Application 생성
   configure|conf  Mommos CLI 설정
-  topic|tp        Topic 생성
+  event|ev        Event 생성
   avro|av         Avro 파일 생성
   kafka|k         Kafka 요청
   sample|sam      샘플 텍스트 파일 생성
   help [command]  display help for command
+```
+
+명령어 뒤에 `-h` 옵션을 추가하여 실행가능한 하위 명령어 및 옵션을 확인할 수 있습니다.
+
+```sh
+$ mmm kafka topic -h
+Usage: mmm kafka topic|tp [options] [command]
+
+Kafka Topic Command
+
+Options:
+  -h, --help         display help for command
+
+Commands:
+  create|c [name]    Kafka Topic Command
+  list|ls            List Topics
+  delete|del <name>  Delete Topic
+  help [command]     display help for command
 ```
 
 명령어의 체계는 다음과 같습니다.
@@ -60,8 +78,10 @@ EVENT --> EVENT_MAPPING(mapping) -.- EMR{{이벤트 매핑 파일 생성}}
 AVRO -.- AVCR{{Avro 파일 생성}}
 AVRO --> AVRO_REGISTER(register) -.- |path| AVREGR{{Avro를 스키마레지스트리에 등록}}
 
+KAFKA --> KAFKA_CONF(configure) -.- KTCONFR{{카프카 접속 설정}}
 KAFKA --> KAFKA_TOPIC(topic)
 KAFKA_TOPIC --> KAFKA_TOPIC_CREATE(create) -.- |name|KTCR{{Topic 생성}}
+KAFKA_TOPIC --> KAFKA_TOPIC_DELETE(delete) -.- |name|KTDR{{Topic 삭제}}
 KAFKA_TOPIC --> KAFKA_TOPIC_LIST(list) -.- KTLR{{등록된 Topic 목록 조회}}
 ```
 
@@ -169,6 +189,47 @@ Avro 파일을 위 Schema Registry에 등록하시겠습니까? Yes
 result { id: 100511 }
 ```
 
-## 개발 진행 이슈
+Kafka 정보 설정
 
-- `mmm kafka create` 명령어 및 `mmm topic` 명령어를 통해 Topic을 생성하려고 하였으나 해결하지 못하고 있음
+```sh
+$ mmm kafka configure
+
+::Kafka 설정 파일 생성::
+? Kafka 접속 정보를 설정하시겠습니까? Yes
+? Kafka Broker의 URL을 입력하세요. localhost:9092
+? Kafka Cluster Id를 입력하세요. XR6H6GPdRFiW7kQQk9VxSQ
+? SASL 인증 [username]을 입력하세요. [hidden]
+? SASL 인증 [password]를 입력하세요. [hidden]
+```
+
+Kafka Topic 목록 조회
+
+```sh
+$ mmm kafka topic list
+
+[
+  '_confluent-monitoring',
+  '_confluent-ksql-default__command_topic',
+  '__consumer_offsets',
+  ...
+  'my-topic',
+]
+```
+
+Kafka Topic 생성
+
+- 파티션은 1개로 고정되어 있습니다.
+
+```sh
+$ mmm kafka topic create my-topic
+
+Topic [my-topic] created successfully.
+```
+
+Kafka Topic 생성
+
+```sh
+$ mmm kafka topic delete my-topic
+
+Topic [my-topic] deleted successfully.
+```

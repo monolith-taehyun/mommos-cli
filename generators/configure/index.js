@@ -21,10 +21,12 @@ class Configure extends Generator {
 			console.error(chalk.redBright('명령어 실행 위치는 Mommos 애플리케이션 root여야 합니다.'));
 			process.exit(1);
 		}
+
+		this.composeWith('mmm:kafka-configure');
 	}
 
 	async prompting() {
-		console.log(chalk.yellow('::CLI 설정 파일 생성::'));
+		console.log(chalk.yellow('::Schema Registry 설정::'));
 		const schemaRegistryAsks = (
 			await this.prompt({
 				name: 'configureSchemaRegistry',
