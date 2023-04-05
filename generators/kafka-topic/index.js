@@ -12,11 +12,8 @@ class KafkaTopic extends Generator {
 		this.env = opts.env;
 	}
 
-	async writing() {
-		createTopic: {
-			// 새로운 토픽 생성
-			await KafkaClient.createTopic('new-topic');
-		}
+	initializing() {
+		this.composeWith('mmm:kafka-topic-create');
 	}
 }
 
