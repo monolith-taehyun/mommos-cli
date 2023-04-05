@@ -1,19 +1,8 @@
 const { Kafka, logLevel } = require('kafkajs');
 
 class KafkaClient {
-	constructor() {
-		this.kafka = new Kafka({
-			clientId: 'mommos-cli',
-			brokers: ['localhost:9092'], // Kafka broker 정보,
-			ssl: true,
-			sasl: {
-				mechanism: 'plain',
-				username: '',
-				password: '',
-			},
-			clusterId: 'lkc-yonmxp',
-			logLevel: logLevel.DEBUG,
-		});
+	constructor(options) {
+		this.kafka = new Kafka({ ...options, logLevel: logLevel.INFO });
 		this.admin = this.kafka.admin();
 	}
 
@@ -24,11 +13,11 @@ class KafkaClient {
 				topics: [
 					{
 						topic: topicName,
+						numPartitions: 1,
 					},
 				],
-				// validateOnly: true,
 			});
-			console.log(`Topic ${topicName} created successfully.`, result);
+			console.log(`Topic [${topicName}] created successfully.`);
 		} catch (error) {
 			console.error(`Error creating topic ${topicName}`, error);
 		} finally {
@@ -42,7 +31,7 @@ class KafkaClient {
 			await this.admin.deleteTopics({
 				topics: [topicName],
 			});
-			console.log(`Topic ${topicName} deleted successfully.`);
+			console.log(`Topic [${topicName}] deleted successfully.`);
 		} catch (error) {
 			console.error(`Error deleting topic ${topicName}: ${error}`);
 		} finally {
@@ -67,4 +56,4 @@ class KafkaClient {
 	}
 }
 
-module.exports = new KafkaClient();
+module.exports = KafkaClient;
