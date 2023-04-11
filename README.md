@@ -77,6 +77,7 @@ EVENT --> EVENT_MAPPING(mapping) -.- EMR{{이벤트 매핑 파일 생성}}
 
 AVRO -.- AVCR{{Avro 파일 생성}}
 AVRO --> AVRO_REGISTER(register) -.- |path| AVREGR{{Avro를 스키마레지스트리에 등록}}
+AVRO --> AVRO_DOWNLOAD(download) -.- AVDOWR{{스키마 레지스트리에 등록된 Avro 파일들을 다운로드}}
 
 KAFKA --> KAFKA_CONF(configure) -.- KTCONFR{{카프카 접속 설정}}
 KAFKA --> KAFKA_TOPIC(topic)
@@ -187,6 +188,32 @@ $ mmm avro reg ./src/main/avro/schema-CreateSampleEventCommandAvro-v1.avsc
 ? Schema Registry URL:https://psrc-7q7vj.ap-southeast-2.aws.confluent.cloud
 Avro 파일을 위 Schema Registry에 등록하시겠습니까? Yes
 result { id: 100511 }
+```
+
+Avro 파일 다운로드 명령어 예시
+
+```sh
+$ mmm avro download
+
+::Avro 파일 다운로드::
+? 다운로드할 Avro 파일들을 선택하세요.
+선택한 Avro가 참조하는 Avro가 있다면 함께 다운로드됩니다.
+ (Press <space> to select, <a> to toggle all, <i> to invert selection, and <enter> to proceed)
+ ◯ AddProductAvro
+ ◯ CompleteMemberJoinAvro
+ ◯ CreateGuildCommandAvro
+❯◉ CreateMemberAvro
+ ◯ CreateMemberCompletedAvro
+ ◯ CreateOrderAvro
+ ◯ CreateProductAvro
+ ◯ CreateProductAvroByPSUs
+ ◯ CreateSampleEventCommandAvro
+ ◯ CreateTeamEventCommandAvro
+ ◯ DeleteRoleAvro
+...
+
+ CreateOrderAvro
+   create src/main/avro/schema-CreateMemberAvro-v2.avsc
 ```
 
 Kafka 정보 설정
