@@ -64,6 +64,10 @@ function writeJsonWithoutDuplicates(filePath, data) {
 	}
 }
 
+function schemaRegistryApiResponse(result) {
+	return JSON.parse(result.responseData);
+}
+
 module.exports = {
 	genVariousCases,
 	toDot,
@@ -72,4 +76,5 @@ module.exports = {
 	getInnerString,
 	getConfigJson,
 	writeJsonWithoutDuplicates,
+	schemaRegistryApiResponse,
 };

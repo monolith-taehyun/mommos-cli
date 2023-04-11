@@ -43,4 +43,27 @@ avroRegisterCommand.action((path) => {
 });
 cmd.addCommand(avroRegisterCommand);
 
+// mmm avro download
+const downloadCommandName = `download`;
+const downloadGeneratorName = `${name}-${downloadCommandName}`;
+
+yeomanEnv.register(
+	require.resolve(path.join(__dirname, '../..', 'generators', downloadGeneratorName)),
+	`mmm:${downloadGeneratorName}`,
+);
+
+const avroDownloadGennertator = yeomanEnv.create(`mmm:${downloadGeneratorName}`, {
+	args: {},
+});
+
+avroDownloadGennertator.destinationRoot('.');
+
+const avroDownloadCommand = new Command(downloadCommandName);
+avroDownloadCommand.description('Download avro files');
+avroDownloadCommand.alias('down');
+avroDownloadCommand.action((path) => {
+	avroDownloadGennertator.run();
+});
+cmd.addCommand(avroDownloadCommand);
+
 module.exports = cmd;
