@@ -68,6 +68,21 @@ function schemaRegistryApiResponse(result) {
 	return JSON.parse(result.responseData);
 }
 
+function isLatestVersion(currentVersion, latestVersion) {
+	const current = currentVersion.replace(/^v/, '').split('.').map(Number);
+	const latest = latestVersion.replace(/^v/, '').split('.').map(Number);
+
+	for (let i = 0; i < 3; i++) {
+		if (latest[i] > current[i]) {
+			return false;
+		} else if (latest[i] < current[i]) {
+			return true;
+		}
+	}
+
+	return true;
+}
+
 module.exports = {
 	genVariousCases,
 	toDot,
@@ -77,4 +92,5 @@ module.exports = {
 	getConfigJson,
 	writeJsonWithoutDuplicates,
 	schemaRegistryApiResponse,
+	isLatestVersion,
 };

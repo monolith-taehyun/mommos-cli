@@ -1,6 +1,6 @@
 {
 	"name": "mommos-cli",
-	"version": "0.1.0",
+	"version": "0.10.0",
 	"description": "",
 	"main": "src/index.js",
 	"bin": {
@@ -10,8 +10,8 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "node src/index.js",
 		"clear": "rm -rf output generators/sample/templates",
-		"ig": "npm pack && npm install -g ./mommos-cli-0.1.0.tgz",
-    "prettier": "prettier --write --config ./.prettierrc"
+		"ig": "npm pack && npm install -g ./mommos-cli-$npm_package_version.tgz",
+		"prettier": "prettier --write --config ./.prettierrc"
 	},
 	"keywords": [],
 	"author": "",
@@ -22,6 +22,7 @@
 		"figlet": "^1.5.2",
 		"html-wiring": "^2.0.0",
 		"kafkajs": "^2.2.4",
+		"request-promise-native": "^1.0.9",
 		"to-case": "^2.0.0",
 		"ucfirst": "^1.0.0",
 		"yeoman-environment": "^3.15.1",

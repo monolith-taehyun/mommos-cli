@@ -11,6 +11,15 @@ EDA(Event Driven Architecture) 기반의 마이크로 서비스를 구현하기 
 $ npm i -g https://github.com/monolith-taehyun/mommos-cli.git
 ```
 
+## 최신 버전으로 업데이트
+
+이미 `Mommos CLI`가 설치되어 있다면 최신 버전을 설치하기 위해 위의 설치 명령어를 사용해도 되지만 `update` 명령어를 이용할 수도 있습니다.
+
+```sh
+$ mmm update
+? 업데이트 가능한 최신 버전이 있습니다. 업데이트 하시겠습니까? Yes
+```
+
 ## 사용법
 
 설치가 완료되면 터미널 상에서 `mmm` 명령어를 사용할 수 있습니다.
@@ -62,12 +71,15 @@ Commands:
 graph LR
 
 Main(mmm) --> APP(app)
+Main --> UPDATE(update)
 Main --> CONF(configure)
 Main --> EVENT(event)
 Main --> AVRO(avro)
 Main --> KAFKA(kafka)
 
 APP -.-> |생략가능| APP_CREATE(create) -.- ACR{{애플리케이션 생성}}
+
+UPDATE -.- UP_DESC{{CLI 업데이트}}
 
 CONF -.- CONF_DESC{{정보 설정}}
 
