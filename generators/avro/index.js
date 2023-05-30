@@ -45,6 +45,12 @@ class Avro extends Generator {
 				default: `${this.rcData?.package || 'kr.co.monolith.park'}.avro`,
 			},
 			{
+				name: 'avroSchemaPrefix',
+				type: 'input',
+				message: `사용하고자 하는 Prefix(플랫폼 키 등)를 알려주세요.(예시: 'eda-sgp, eda-cju')`,
+				default: `${this.rcData?.prefix || 'eda-sgp'}`,
+			},
+			{
 				name: 'avroType',
 				type: 'list',
 				message: 'Avro의 유형을 선택하세요.',
@@ -198,13 +204,14 @@ class Avro extends Generator {
 	writing() {
 		const args = {
 			namespace: genVariousCases(this.answers.namespace),
+			avroSchemaPrefix: genVariousCases(this.answers.avroSchemaPrefix),
 			avroType: genVariousCases(this.answers.avroType),
 			eventName: genVariousCases(this.answers.eventName),
 			fields: this.answers.fields,
 		};
 
 		appBase: {
-			this.destinationFile = `src/main/avro/schema-${args.eventName.pascal}Event${args.avroType.pascal}Avro-v1.avsc`;
+			this.destinationFile = `src/main/avro/schema-${args.eventName.pascal}${args.avroType.pascal}Avro-v1.avsc`;
 			this.valueAvro = {
 				fields: args.fields.map((field) => {
 					const contents = {
@@ -216,7 +223,7 @@ class Avro extends Generator {
 					}
 					return contents;
 				}),
-				name: `${args.eventName.pascal}Event${args.avroType.pascal}Avro`,
+				name: `${args.eventName.pascal}${args.avroType.pascal}Avro`,
 				namespace: `${args.namespace.dot}`,
 				type: 'record',
 			};
@@ -235,14 +242,14 @@ class Avro extends Generator {
 						{
 							default: null,
 							name: 'value',
-							type: ['null', `${args.eventName.pascal}Event${args.avroType.pascal}Avro`],
+							type: ['null', `${args.eventName.pascal}${args.avroType.pascal}Avro`],
 						},
 					],
 					name: `${args.eventName.pascal}EventTopicValueAvro`,
 					namespace: `${args.namespace.dot}`,
 					type: 'record',
 				};
-				this.topicValueAvroFile = `src/main/avro/schema-${args.eventName.snake}-value-v1.avsc`;
+				this.topicValueAvroFile = `src/main/avro/schema-${args.avroSchemaPrefix.slug}-${args.eventName.pascal}Event${args.avroType.pascal}Avro-value-v1.avsc`;
 				this.fs.writeJSON(this.destinationPath(this.topicValueAvroFile), this.topicValueAvro);
 			}
 		}
