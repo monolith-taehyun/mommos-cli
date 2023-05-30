@@ -36,6 +36,7 @@ Options:
 
 Commands:
   app|ap          Mommos 기반 Application 생성
+  update|up       Mommos CLI 버전 업데이트
   configure|conf  Mommos CLI 설정
   event|ev        Event 생성
   avro|av         Avro 파일 생성

@@ -6,6 +6,9 @@ const Generator = require('yeoman-generator');
 const chalk = require('chalk');
 const KafkaClient = require('../../src/kafka');
 
+/**
+ * 카프카 토픽을 생성합니다.
+ */
 class KafkaTopicCreate extends Generator {
 	constructor(args, opts) {
 		super(args, opts);
